@@ -12,7 +12,7 @@ pipeline {
       //  DOCKER_IMAGE_NAME = 'admin-beta-aks'
       //  IMAGE_TAG = "beta-admin-build-${BUILD_NUMBER}"
         JDK_HOME = "${tool 'JDK'}"
-      //  PATH = "${tool 'JDK'}/bin:${env.PATH}"
+        PATH = "${tool 'JDK'}/bin:${env.PATH}"
     //     //BASE_URL_BETA = "https://beta-be.wissda.cloud/admin"
     //     //BASE_URL_GAMMA = "https://gamma-be.wissda.cloud/admin"
      }
