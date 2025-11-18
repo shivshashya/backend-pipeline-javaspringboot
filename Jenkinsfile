@@ -17,7 +17,7 @@ pipeline {
                      defaultValue: 'main',
                      name: 'BRANCH_NAME',
                      type: 'PT_BRANCH',
-                     useRepository: 'https://github.com/wissda-inc/AdminService.git'
+                     useRepository: 'https://github.com/shivshashya/backend-pipeline-javaspringboot.git'
     }
 
     options {
