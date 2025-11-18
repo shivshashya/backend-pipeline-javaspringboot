@@ -43,29 +43,29 @@ pipeline {
             }
         }
 
-//         stage('Build') {
-//             steps {
-//                 script {
-//                     try {
-//                         sh 'mvn clean package'
-//                     } catch (Exception e) {
-//                         error "❌ Build failed: ${e.message}"
-//                     }
-//                 }
-//             }
-//         }
+        stage('Build') {
+            steps {
+                script {
+                    try {
+                        sh 'mvn clean package'
+                    } catch (Exception e) {
+                        error "❌ Build failed: ${e.message}"
+                    }
+                }
+            }
+        }
 
-//         stage('Unit Test') {
-//             steps {
-//                 script {
-//                     try {
-//                         sh 'mvn surefire-report:report'
-//                     } catch (Exception e) {
-//                         error "❌ Unit tests failed: ${e.message}"
-//                     }
-//                 }
-//             }
-//         }
+        stage('Unit Test') {
+            steps {
+                script {
+                    try {
+                        sh 'mvn surefire-report:report'
+                    } catch (Exception e) {
+                        error "❌ Unit tests failed: ${e.message}"
+                    }
+                }
+            }
+        }
 
 //         stage('SonarQube Analysis') {
 //             steps {
