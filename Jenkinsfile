@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // ACR_NAME = 'wissda.azurecr.io'
-        ECR_NAME = ''
+     //   Dockerhub_NAME = ''
         DOCKER_IMAGE_NAME = 'admin-beta-aks'
         IMAGE_TAG = "beta-admin-build-${BUILD_NUMBER}"
         JDK_HOME = "${tool 'JDK'}"
@@ -252,5 +252,5 @@ pipeline {
 //         always {
 //             cleanWs()
 //         }
-//     }
-// }
+     }
+ }
