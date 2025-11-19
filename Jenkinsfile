@@ -178,6 +178,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
                     sh "docker pull ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"  
+                    sh "docker rm -f $(docker ps -aq)"
                     sh "docker run -d -p 8082:8082 --name demo-app-container ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"                  
                 }
               }
@@ -258,6 +259,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
                         sh "docker pull ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"  
+                        sh "docker rm -f $(docker ps -aq)"
                         sh "docker run -d -p 8083:8083 --name demo-app-container-2 ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}" 
                         }
                     } catch (Exception e) {
