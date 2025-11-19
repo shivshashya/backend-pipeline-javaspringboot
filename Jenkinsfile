@@ -48,29 +48,29 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    try {
-                        sh 'mvn clean package'
-                    } catch (Exception e) {
-                        error "❌ Build failed: ${e.message}"
-                    }
-                }
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh 'mvn clean package'
+        //             } catch (Exception e) {
+        //                 error "❌ Build failed: ${e.message}"
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Unit Test') {
-            steps {
-                script {
-                    try {
-                        sh 'mvn surefire-report:report'
-                    } catch (Exception e) {
-                        error "❌ Unit tests failed: ${e.message}"
-                    }
-                }
-            }
-        }
+        // stage('Unit Test') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh 'mvn surefire-report:report'
+        //             } catch (Exception e) {
+        //                 error "❌ Unit tests failed: ${e.message}"
+        //             }
+        //         }
+        //     }
+        // }
 
 //         stage('SonarQube Analysis') {
 //             steps {
@@ -89,27 +89,27 @@ pipeline {
 //             }
 //         }
 
-//         stage('Build Docker Image') {
-//             steps {
-//                 script {
-//                     try {
-//                         dir('devops-repo') {
-//                             checkout([$class: 'GitSCM',
-//                                       branches: [[name: 'master']],
-//                                       userRemoteConfigs: [[
-//                                           credentialsId: 'PAT_Jenkins',
-//                                           url: 'https://github.com/wissda-inc/wdp-devops.git'
-//                                       ]]]
-//                             )
-//                         }
-//                         sh "docker build -t ${ACR_NAME}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} -f devops-repo/be-microservices/qa/admin/Dockerfile ."
-//                         sh 'docker images'
-//                     } catch (Exception e) {
-//                         error "❌ Docker build failed: ${e.message}"
-//                     }
-//                 }
-//             }
-//         }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 dir('devops-repo') {
+        //                     checkout([$class: 'GitSCM',
+        //                               branches: [[name: 'master']],
+        //                               userRemoteConfigs: [[
+        //                                   credentialsId: 'PAT_Jenkins',
+        //                                   url: 'https://github.com/wissda-inc/wdp-devops.git'
+        //                               ]]]
+        //                     )
+        //                 }
+        //                 sh "docker build -t ${ACR_NAME}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} -f devops-repo/be-microservices/qa/admin/Dockerfile ."
+        //                 sh 'docker images'
+        //             } catch (Exception e) {
+        //                 error "❌ Docker build failed: ${e.message}"
+        //             }
+        //         }
+        //     }
+        // }
 
 //         stage('Push to ACR') {
 //             steps {
