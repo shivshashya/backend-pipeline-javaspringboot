@@ -7,10 +7,13 @@ pipeline {
         jdk 'JDK'
     }
     environment {
-        // ACR_NAME = 'wissda.azurecr.io'
+        DOCKERHUB_REPO = "shivshashya"        
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+        //IMAGE_TAG = "${env.BUILD_NUMBER}"
+        //ACR_NAME = 'wissda.azurecr.io'
      //   Dockerhub_NAME = ''
-      //  DOCKER_IMAGE_NAME = 'admin-beta-aks'
-      //  IMAGE_TAG = "beta-admin-build-${BUILD_NUMBER}"
+        DOCKER_IMAGE_NAME = 'admin-beta-aks'
+        IMAGE_TAG = "beta-admin-build-${BUILD_NUMBER}"
         JDK_HOME = "${tool 'JDK'}"
         PATH = "${tool 'JDK'}/bin:${env.PATH}"
     //     //BASE_URL_BETA = "https://beta-be.wissda.cloud/admin"
@@ -89,27 +92,28 @@ pipeline {
 //             }
 //         }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 dir('devops-repo') {
-        //                     checkout([$class: 'GitSCM',
-        //                               branches: [[name: 'master']],
-        //                               userRemoteConfigs: [[
-        //                                   credentialsId: 'PAT_Jenkins',
-        //                                   url: 'https://github.com/wissda-inc/wdp-devops.git'
-        //                               ]]]
-        //                     )
-        //                 }
-        //                 sh "docker build -t ${ACR_NAME}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} -f devops-repo/be-microservices/qa/admin/Dockerfile ."
-        //                 sh 'docker images'
-        //             } catch (Exception e) {
-        //                 error "❌ Docker build failed: ${e.message}"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    try {
+                        dir('devops-repo') {
+                            checkout([$class: 'GitSCM',
+                                      branches: [[name: 'main']],
+                                      userRemoteConfigs: [[
+                                          credentialsId: 'PAT_Jenkins',
+                                          url: 'https://github.com/shivshashya/backend-pipeline-javaspringboot.git'
+                                      ]]]
+                            )
+                        }
+
+                        sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ."
+                        sh 'docker images'
+                    } catch (Exception e) {
+                        error "❌ Docker build failed: ${e.message}"
+                    }
+                }
+            }
+        }
 
 //         stage('Push to ACR') {
 //             steps {
@@ -125,6 +129,30 @@ pipeline {
 //                 }
 //             }
 //         }
+        stage('Push to QA Docker Hub') {
+        steps {
+            script {
+                // // Define image name and tag
+               // def qaImage = "${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}-qa"
+
+                // Tag the built image for QA
+                // sh "docker tag ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ${qaImage}"
+
+                // Log into Docker Hub & push the QA tag
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                    sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
+                    sh "docker push ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+                    // Optionally push as latest‐qa or similar
+                   // sh "docker tag ${qaImage} ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:latest-qa"
+                   // sh "docker push ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:latest-qa"
+                }
+
+                // You can clean up local QA image if you like
+               // sh "docker rmi ${qaImage} ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:latest-qa"
+            }
+        }
+        }
+       
 
 //         stage('Deploy to QA/Beta') {
 //             steps {
