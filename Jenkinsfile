@@ -154,21 +154,33 @@ pipeline {
         }
        
 
-//         stage('Deploy to QA/Beta') {
-//             steps {
-//                 script {
-//                     try {
-//                         sh "sed -i 's|{IMAGE_TAG}|${IMAGE_TAG}|' devops-repo/be-microservices/qa/admin/admin-deployment.yaml"
-//                         withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kube-qa', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-//                             sh "kubectl apply -f devops-repo/be-microservices/qa/admin/admin-clusterip-service.yaml"
-//                             sh "kubectl apply -f devops-repo/be-microservices/qa/admin/admin-deployment.yaml"
-//                         }
-//                     } catch (Exception e) {
-//                         error "❌ Deployment to QA/Beta failed: ${e.message}"
-//                     }
-//                 }
-//             }
-//         }
+        // stage('Deploy to QA/Beta') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh "sed -i 's|{IMAGE_TAG}|${IMAGE_TAG}|' devops-repo/be-microservices/qa/admin/admin-deployment.yaml"
+        //                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kube-qa', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+        //                     sh "kubectl apply -f devops-repo/be-microservices/qa/admin/admin-clusterip-service.yaml"
+        //                     sh "kubectl apply -f devops-repo/be-microservices/qa/admin/admin-deployment.yaml"
+        //                 }
+        //             } catch (Exception e) {
+        //                 error "❌ Deployment to QA/Beta failed: ${e.message}"
+        //             }
+        //         }
+        //     }
+        // }
+
+
+
+        stage ('Beta-Deploy docker image')
+            steps {
+                script {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                    sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
+                    sh "docker pull ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"  
+                    sh "docker run -d -p 8082:8082 --name demo-app-container ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"                  
+                }
+            }
 
 //    /*     stage('Integration API Tests') {
 //             steps {
