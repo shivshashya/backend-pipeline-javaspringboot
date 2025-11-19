@@ -307,15 +307,15 @@ pipeline {
 //         }
 //     }
 
-//     post {
-//         success {
-//             echo "🎉 Pipeline completed successfully!"
-//         }
-//         failure {
-//             echo "🚨 Pipeline failed. Please check above logs."
-//         }
-//         always {
-//             cleanWs()
-//         }
+    post {
+        success {
+            echo "🎉 Pipeline completed successfully!"
+        }
+        failure {
+            echo "🚨 Pipeline failed. Please check above logs."
+        }
+        always {
+            cleanWs()
+        }
     }
  }
