@@ -172,7 +172,7 @@ pipeline {
 
 
 
-        stage ('Beta-Deploy docker image')
+        stage ('Beta-Deploy docker image'){
             steps {
                 script {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
@@ -181,6 +181,7 @@ pipeline {
                     sh "docker run -d -p 8082:8082 --name demo-app-container ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"                  
                 }
             }
+            }  
 
 //    /*     stage('Integration API Tests') {
 //             steps {
