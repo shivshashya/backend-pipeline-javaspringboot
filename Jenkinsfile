@@ -96,15 +96,15 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir('devops-repo') {
-                            checkout([$class: 'GitSCM',
-                                      branches: [[name: 'main']],
-                                      userRemoteConfigs: [[
-                                          credentialsId: 'PAT_Jenkins',
-                                          url: 'https://github.com/shivshashya/backend-pipeline-javaspringboot.git'
-                                      ]]]
-                            )
-                        }
+                        // dir('devops-repo') {
+                        //     checkout([$class: 'GitSCM',
+                        //               branches: [[name: 'main']],
+                        //               userRemoteConfigs: [[
+                        //                   credentialsId: 'PAT_Jenkins',
+                        //                   url: 'https://github.com/shivshashya/backend-pipeline-javaspringboot.git'
+                        //               ]]]
+                        //     )
+                        // }
 
                         sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ."
                         sh 'docker images'
