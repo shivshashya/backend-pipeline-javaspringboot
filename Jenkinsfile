@@ -180,9 +180,9 @@ pipeline {
                     sh "docker pull ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"  
                     sh "docker run -d -p 8082:8082 --name demo-app-container ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"                  
                 }
-            }
+              }
             }  
-        }
+         }
 
 //    /*     stage('Integration API Tests') {
 //             steps {
@@ -226,15 +226,15 @@ pipeline {
 //             }
 //         }
 
-//         stage('Approval to Proceed') {
-//             steps {
-//                 script {
-//                     input message: "✅ Integration API Tests passed. Proceed to Pre-Prod/Gamma deployment?",
-//                           ok: "Proceed"
-//                 }
-//             }
-//         }
-// */
+        stage('Approval to Proceed') {
+            steps {
+                script {
+                    input message: "✅ Integration API Tests passed. Proceed to Pre-Prod/Gamma deployment?",
+                          ok: "Proceed"
+                }
+            }
+        }
+
 //         stage('Deploy to Pre-Prod/Gamma') {
 //             steps {
 //                 script {
@@ -250,6 +250,22 @@ pipeline {
 //                 }
 //             }
 //         }
+
+        stage('Deploy to Pre-Prod/Gamma') {
+            steps {
+                script {
+                    try {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
+                        sh "docker pull ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"  
+                        sh "docker run -d -p 8083:8083 --name demo-app-container-2 ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}" 
+                        }
+                    } catch (Exception e) {
+                        error "❌ Deployment to Pre-Prod failed: ${e.message}"
+                    }
+                }
+            }
+        }
 
 //         stage('Clean up ACR') {
 //             steps {
