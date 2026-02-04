@@ -2,9 +2,6 @@ name: Enforce branch promotion policy
 
 on:
   pull_request:
-    branches:
-      - erp-preprod
-      - erp-prod
   workflow_dispatch:  
 
 jobs:
