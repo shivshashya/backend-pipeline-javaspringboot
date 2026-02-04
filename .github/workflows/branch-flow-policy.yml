@@ -1,0 +1,29 @@
+name: Enforce branch promotion policy
+
+on:
+  pull_request:
+  workflow_dispatch:  
+
+jobs:
+  enforce-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch
+        run: |
+          BASE="${{ github.base_ref }}"
+          HEAD="${{ github.head_ref }}"
+
+          echo "Target branch: $BASE"
+          echo "Source branch: $HEAD"
+
+          if [[ "$BASE" == "erp-preprod" && "$HEAD" != "erp-qa" ]]; then
+            echo "❌ erp-preprod can ONLY receive PRs from erp-qa"
+            exit 1
+          fi
+
+          if [[ "$BASE" == "erp-prod" && "$HEAD" != "erp-preprod" ]]; then
+            echo "❌ erp-prod can ONLY receive PRs from erp-preprod"
+            exit 1
+          fi
+
+          echo "✅ Branch promotion rule satisfied"
