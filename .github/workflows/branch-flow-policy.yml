@@ -5,6 +5,7 @@ on:
     branches:
       - erp-preprod
       - erp-prod
+  workflow_dispatch:  
 
 jobs:
   enforce-policy:
